@@ -21,7 +21,6 @@ public class CensusAnalyser {
             Iterator<IndiaCensusCSV> censusCSVIterator = csvToBean.iterator();
             Iterable<IndiaCensusCSV> csvItrable = () -> censusCSVIterator;
             int namOfEateries = (int) StreamSupport.stream(csvItrable.spliterator(), false).count();
-            System.out.println(namOfEateries);
             return namOfEateries;
 
         } catch (IOException e) {
@@ -30,6 +29,9 @@ public class CensusAnalyser {
         } catch (IllegalStateException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+        } catch (RuntimeException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.INCORRECT_FILE_DATA);
         }
 
     }
