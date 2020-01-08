@@ -2,7 +2,6 @@ package censusanalyser;
 
 import com.google.gson.Gson;
 import csvbuilder.*;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -72,5 +71,24 @@ public class CensusAnalyser {
             System.out.println(jsonString);
             return jsonString;
         }
+    }
+
+    public String getSortedDataByStateCode(String csvFilePath) {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
+            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            Iterator<CSVStates> csvIterator = csvBuilder.getCSVFileIterator(reader,CSVStates.class);
+            Iterable<CSVStates> iterable = () -> csvIterator;
+            List<CSVStates> list = StreamSupport
+                    .stream(iterable.spliterator(), false)
+                    .collect(Collectors.toList());
+            Comparator<CSVStates> csvComparator = (a,b) -> ((a.stateCode.compareTo(b.stateCode)) < 0 ) ? -1 : 1;
+            Collections.sort(list,csvComparator);
+            String jsonString = new Gson().toJson(list);
+            System.out.println(jsonString);
+            return jsonString;
+        } catch (IOException | CSVBuilderException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
