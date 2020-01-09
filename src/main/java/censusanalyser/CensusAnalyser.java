@@ -2,14 +2,14 @@ package censusanalyser;
 
 import com.google.gson.Gson;
 import csvbuilder.*;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -19,8 +19,8 @@ public class CensusAnalyser {
 
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<IndiaCensusCSV> censusCSVIterator = csvBuilder.getCSVFileIterator(reader,IndiaCensusCSV.class);
-            return getCount(censusCSVIterator);
+            List listCSVFile = csvBuilder.getListCSVFile(reader, IndiaCensusCSV.class);
+            return listCSVFile.size();
 
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
@@ -37,8 +37,8 @@ public class CensusAnalyser {
 
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<CSVStates> stateCSVIterator = csvBuilder.getCSVFileIterator(reader,CSVStates.class);
-            return getCount(stateCSVIterator);
+            List listCSVFile = csvBuilder.getListCSVFile(reader, CSVStates.class);
+            return listCSVFile.size();
 
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),

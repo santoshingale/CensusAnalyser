@@ -122,34 +122,20 @@ public class CensusAnalyserTest {
     }
 
     @Test
-    public void givenIndianCensusData_itSoouldSort_shouldReturnAndhraPradesh() throws IOException, CSVBuilderException {
+    public void givenIndianCensusData_shouldReturnSortedData() throws IOException, CSVBuilderException {
         CensusAnalyser censusAnalyser = new CensusAnalyser();
         String sortDataByStateName = censusAnalyser.getSortedDataByStateName(INDIA_CENSUS_CSV_FILE_PATH);
         IndiaCensusCSV [] indiaCensusCSVS = new Gson().fromJson(sortDataByStateName,IndiaCensusCSV[].class);
         Assert.assertEquals("Andhra Pradesh",indiaCensusCSVS[0].state);
-    }
-
-    @Test
-    public void givenIndianCensusData_itSoouldSort_shouldReturnWestBengal() throws IOException, CSVBuilderException {
-        CensusAnalyser censusAnalyser = new CensusAnalyser();
-        String sortDataByStateName = censusAnalyser.getSortedDataByStateName(INDIA_CENSUS_CSV_FILE_PATH);
-        IndiaCensusCSV [] indiaCensusCSVS = new Gson().fromJson(sortDataByStateName,IndiaCensusCSV[].class);
         Assert.assertEquals("West Bengal",indiaCensusCSVS[28].state);
     }
 
     @Test
-    public void givenIndianStateCode_itSoouldSort_shouldReturnAndhraPradesh() throws IOException, CSVBuilderException {
+    public void givenIndianStateCode_shouldReturnSortedData() throws IOException, CSVBuilderException {
         CensusAnalyser censusAnalyser = new CensusAnalyser();
         String sortedDataByStateCode = censusAnalyser.getSortedDataByStateCode(INDIA_STATE_CODE_CSV_FILE_PATH);
         CSVStates [] indiaCensusCSVS = new Gson().fromJson(sortedDataByStateCode,CSVStates[].class);
         Assert.assertEquals("Andhra Pradesh New",indiaCensusCSVS[0].stateName);
-    }
-
-    @Test
-    public void givenIndianStateCode_itSoouldSort_shouldReturnWestBengal() throws IOException, CSVBuilderException {
-        CensusAnalyser censusAnalyser = new CensusAnalyser();
-        String sortedDataByStateCode = censusAnalyser.getSortedDataByStateCode(INDIA_STATE_CODE_CSV_FILE_PATH);
-        CSVStates [] indiaCensusCSVS = new Gson().fromJson(sortedDataByStateCode,CSVStates[].class);
         Assert.assertEquals("West Bengal",indiaCensusCSVS[36].stateName);
     }
 }
