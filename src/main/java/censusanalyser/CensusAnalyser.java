@@ -106,4 +106,15 @@ public class CensusAnalyser {
         System.out.println(jsonString);
         return jsonString;
     }
+
+    public String getSortedDataByArea() throws CensusAnalyserException {
+        if (censusCSVList == null || censusCSVList.size() == 0) {
+            throw new CensusAnalyserException("No Cencus Data", CensusAnalyserException.ExceptionType.NO_CENSUS_DATA);
+        }
+        Comparator<IndiaCensusDAO> censusCSVComparator = ( a, b ) -> (( a.areaInSqKm - b.areaInSqKm) > 0 ) ? -1 : 1;
+        Collections.sort(censusCSVList, censusCSVComparator);
+        String jsonString = new Gson().toJson(censusCSVList);
+        System.out.println(jsonString);
+        return jsonString;
+    }
 }
