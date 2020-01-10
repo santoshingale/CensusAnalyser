@@ -195,4 +195,17 @@ public class CensusAnalyserTest {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.NO_CENSUS_DATA,e.type);
         }
     }
+
+    @Test
+    public void givenIndianCensusData_shouldReturnSortedData_ByPopulationDensity() throws IOException, CSVBuilderException, CensusAnalyserException {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            IndiaCensusCSV[] indiaCensusCSVS = new Gson().fromJson(censusAnalyser.getSortedDataByPopulationDensity(), IndiaCensusCSV[].class);
+            Assert.assertEquals("Bihar", indiaCensusCSVS[0].state);
+            Assert.assertEquals("Arunachal Pradesh", indiaCensusCSVS[28].state);
+        } catch (CensusAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
 }
