@@ -1,14 +1,12 @@
 package censusanalyser;
 
-import com.opencsv.bean.CsvBindByName;
-
-public class IndiaStateDAO {
+public class IndiaStateCodeDAO {
     public int srNo;
     public String stateName;
     public int tin;
     public String stateCode;
 
-    public IndiaStateDAO(CSVStates csvStates) {
+    public IndiaStateCodeDAO(CSVStates csvStates) {
         this.srNo = csvStates.srNo;
         this.stateName = csvStates.stateName;
         this.tin = csvStates.tin;
