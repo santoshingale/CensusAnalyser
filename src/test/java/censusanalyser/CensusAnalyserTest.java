@@ -172,4 +172,27 @@ public class CensusAnalyserTest {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.NO_STATE_DATA,e.type);
         }
     }
+
+    @Test
+    public void givenIndianCensusData_shouldReturnSortedData_ByPopulation() throws IOException, CSVBuilderException, CensusAnalyserException {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            IndiaCensusCSV[] indiaCensusCSVS = new Gson().fromJson(censusAnalyser.getSortedDataByPopulation(), IndiaCensusCSV[].class);
+            Assert.assertEquals("Uttar Pradesh", indiaCensusCSVS[0].state);
+            Assert.assertEquals("Sikkim", indiaCensusCSVS[28].state);
+        } catch (CensusAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIndianCensusData_whenNoCSVData_sortMethod_shouldReturnException() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            IndiaCensusCSV[] indiaCensusCSVS = new Gson().fromJson(censusAnalyser.getSortedDataByPopulation(), IndiaCensusCSV[].class);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.NO_CENSUS_DATA,e.type);
+        }
+    }
 }
