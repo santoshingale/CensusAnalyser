@@ -13,10 +13,12 @@ public class CensusAnalyser {
 
     List<IndiaCensusDAO> censusCSVList = null;
     List<IndiaStateCodeDAO> stateCodeCSVList = null;
+    List<USCensusDAO> usCensusDAO = null;
 
     public CensusAnalyser() {
         this.censusCSVList = new ArrayList<IndiaCensusDAO>();
         this.stateCodeCSVList = new ArrayList<IndiaStateCodeDAO>();
+        this.usCensusDAO = new ArrayList<USCensusDAO>();
     }
     
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException {
@@ -116,5 +118,23 @@ public class CensusAnalyser {
         String jsonString = new Gson().toJson(censusCSVList);
         System.out.println(jsonString);
         return jsonString;
+    }
+
+    public int loadUSCensusData(String csvFilePath) throws CensusAnalyserException {
+
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
+            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            List<USCensusCSV> listUSCSVFile = csvBuilder.getListCSVFile(reader, USCensusCSV.class);
+            listUSCSVFile.stream().filter(usData -> usCensusDAO.add(new USCensusDAO(usData))).collect(Collectors.toList());
+            return usCensusDAO.size();
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (RuntimeException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.INCORRECT_FILE_DATA);
+        } catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(), e.exceptionType.name());
+        }
     }
 }
