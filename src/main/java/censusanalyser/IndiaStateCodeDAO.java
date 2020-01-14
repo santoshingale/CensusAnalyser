@@ -2,13 +2,13 @@ package censusanalyser;
 
 public class IndiaStateCodeDAO {
     public int srNo;
-    public String stateName;
+    public String state;
     public int tin;
     public String stateCode;
 
     public IndiaStateCodeDAO(CSVStates csvStates) {
         this.srNo = csvStates.srNo;
-        this.stateName = csvStates.stateName;
+        this.state = csvStates.state;
         this.tin = csvStates.tin;
         this.stateCode = csvStates.stateCode;
     }

@@ -1,7 +1,6 @@
 package censusanalyser;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import csvbuilder.CSVBuilderException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -73,8 +72,8 @@ public class CensusAnalyserTest {
     public void givenIndianStateCodeCSVFileReturnsCorrectRecords() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
-            int numOfRecords = censusAnalyser.loadIndiaStateCodeData(INDIA_STATE_CODE_CSV_FILE_PATH);
-            Assert.assertEquals(37,numOfRecords);
+            int numOfRecords = censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH,INDIA_STATE_CODE_CSV_FILE_PATH);
+            Assert.assertEquals(29,numOfRecords);
         } catch (CensusAnalyserException e) {
             e.printStackTrace();
         }
@@ -86,7 +85,7 @@ public class CensusAnalyserTest {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             ExpectedException exceptionRule = ExpectedException.none();
             exceptionRule.expect(CensusAnalyserException.class);
-            censusAnalyser.loadIndiaStateCodeData(WRONG_CSV_FILE_PATH);
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH,WRONG_CSV_FILE_PATH);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM,e.type);
         }
@@ -96,7 +95,7 @@ public class CensusAnalyserTest {
     public void givenIndianStateCode_WithWrongFileType_ShouldThrowException() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
-            censusAnalyser.loadIndiaStateCodeData(INVALID_CSV_FILE_EXTENTION_PATH);
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH,INVALID_CSV_FILE_EXTENTION_PATH);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM,e.type);
         }
@@ -106,7 +105,7 @@ public class CensusAnalyserTest {
     public void givenIndianStateCode_WithIncorrectDelimiter_ShouldThrowException() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
-            censusAnalyser.loadIndiaStateCodeData(INCORRECT_DATA_CSV_FILE_PATH);
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH,INCORRECT_DATA_CSV_FILE_PATH);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.INCORRECT_FILE_DATA,e.type);
         }
@@ -116,7 +115,7 @@ public class CensusAnalyserTest {
     public void givenIndianStateCode_WithIncorrectHeader_ShouldThrowException() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
-            censusAnalyser.loadIndiaStateCodeData(INCORRECT_DATA_CSV_FILE_PATH);
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH,INCORRECT_DATA_CSV_FILE_PATH);
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.INCORRECT_FILE_DATA,e.type);
         }
@@ -139,13 +138,12 @@ public class CensusAnalyserTest {
     public void givenIndianStateCode_shouldReturnSortedData() throws IOException, CSVBuilderException, CensusAnalyserException {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
-            censusAnalyser.loadIndiaStateCodeData(INDIA_STATE_CODE_CSV_FILE_PATH);
+            censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH,INDIA_STATE_CODE_CSV_FILE_PATH);
+            censusAnalyser.getSortedDataByStateCode();
             CSVStates[] csvStates = new Gson().fromJson(censusAnalyser.getSortedDataByStateCode(), CSVStates[].class);
-            Assert.assertEquals("Andhra Pradesh New", csvStates[0].stateName);
-            Assert.assertEquals("West Bengal", csvStates[36].stateName);
+            Assert.assertEquals("Andhra Pradesh", csvStates[0].state);
+            Assert.assertEquals("West Bengal", csvStates[28].state);
         } catch (CensusAnalyserException e) {
-            e.printStackTrace();
-        } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
     }
