@@ -3,26 +3,30 @@ package censusanalyser;
 import com.google.gson.Gson;
 import csvbuilder.*;
 import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toCollection;
 
 public class CensusAnalyser {
-
+    public enum country{INDIA,US}
     Map<String,CensusDAO> censusStateMap = new HashMap<>();
     List<IndiaStateCodeDAO> stateCodeCSVList = new ArrayList<IndiaStateCodeDAO>();
 
-    public int loadIndiaCensusData(String ... csvFilePath) throws CensusAnalyserException {
+    public int loadCensusData(country country, String ... csvFilePath) throws CensusAnalyserException {
+        if (country.equals(CensusAnalyser.country.INDIA)) {
+            return this.loadIndiaCensusData(IndiaCensusCSV.class,csvFilePath);
+        } else if ((country.equals(CensusAnalyser.country.US))) {
+            return this.loadUSCensusData(USCensusCSV.class,csvFilePath);
+        } else throw new CensusAnalyserException("Incorrect COuntry", CensusAnalyserException.ExceptionType.INVALID_COUNTRY);
+    }
+
+    private int loadIndiaCensusData(Class<IndiaCensusCSV> censusCSVClass, String... csvFilePath) throws CensusAnalyserException {
         CensusLoader censusLoader = new CensusLoader();
         censusStateMap = censusLoader.loadCensusData(IndiaCensusCSV.class, csvFilePath);
         return censusStateMap.size();
     }
 
-    public int loadUSCensusData(String ... csvFilePath) throws CensusAnalyserException {
+    private int loadUSCensusData(Class<USCensusCSV> usCensusCSVClass, String... csvFilePath) throws CensusAnalyserException {
         CensusLoader censusLoader = new CensusLoader();
         censusStateMap = censusLoader.loadCensusData(USCensusCSV.class, csvFilePath);
         return censusStateMap.size();

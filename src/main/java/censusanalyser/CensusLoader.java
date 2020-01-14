@@ -13,9 +13,10 @@ import java.util.stream.StreamSupport;
 
 public class CensusLoader {
 
-    // List<CensusDAO> censusStateMap = new ArrayList<CensusDAO>();;
+
 
     public <E> Map<String, CensusDAO> loadCensusData(Class<E> censusCSVClass, String... csvFilePath) throws CensusAnalyserException {
+
         Map<String, CensusDAO> censusStateMap = new TreeMap<>();
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath[0]));) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
