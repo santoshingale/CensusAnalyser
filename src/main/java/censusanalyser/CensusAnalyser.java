@@ -8,30 +8,15 @@ import java.util.*;
 import static java.util.stream.Collectors.toCollection;
 
 public class CensusAnalyser {
-    public enum country{INDIA,US}
+
+    public enum Country {INDIA,US}
+
     Map<String,CensusDAO> censusStateMap = new HashMap<>();
-    List<IndiaStateCodeDAO> stateCodeCSVList = new ArrayList<IndiaStateCodeDAO>();
 
-    public int loadCensusData(country country, String ... csvFilePath) throws CensusAnalyserException {
-        if (country.equals(CensusAnalyser.country.INDIA)) {
-            return this.loadIndiaCensusData(IndiaCensusCSV.class,csvFilePath);
-        } else if ((country.equals(CensusAnalyser.country.US))) {
-            return this.loadUSCensusData(USCensusCSV.class,csvFilePath);
-        } else throw new CensusAnalyserException("Incorrect COuntry", CensusAnalyserException.ExceptionType.INVALID_COUNTRY);
-    }
-
-    private int loadIndiaCensusData(Class<IndiaCensusCSV> censusCSVClass, String... csvFilePath) throws CensusAnalyserException {
-        CensusLoader censusLoader = new CensusLoader();
-        censusStateMap = censusLoader.loadCensusData(IndiaCensusCSV.class, csvFilePath);
+    public int loadCensusData(Country country, String... csvFilePath) throws CensusAnalyserException {
+        censusStateMap = CensusAdapterFactory.getCensusData(country, csvFilePath);
         return censusStateMap.size();
     }
-
-    private int loadUSCensusData(Class<USCensusCSV> usCensusCSVClass, String... csvFilePath) throws CensusAnalyserException {
-        CensusLoader censusLoader = new CensusLoader();
-        censusStateMap = censusLoader.loadCensusData(USCensusCSV.class, csvFilePath);
-        return censusStateMap.size();
-    }
-
 
     public String getSortedDataByStateName() throws IOException, CSVBuilderException, CensusAnalyserException {
         if (censusStateMap == null || censusStateMap.size() == 0) {
@@ -53,7 +38,6 @@ public class CensusAnalyser {
         List<CensusDAO> resultList = censusStateMap.values().stream()
                 .sorted(Comparator.comparing(census -> census.stateCode))
                 .collect(toCollection(ArrayList::new));
-      //  Collections.sort(resultList, csvComparator);
         String jsonString = new Gson().toJson(resultList);
         System.out.println(jsonString);
         return jsonString;
@@ -76,7 +60,8 @@ public class CensusAnalyser {
         if (censusStateMap == null || censusStateMap.size() == 0) {
             throw new CensusAnalyserException("No Cencus Data", CensusAnalyserException.ExceptionType.NO_CENSUS_DATA);
         }
-        List<CensusDAO> resultList = censusStateMap.values().stream()
+        List<CensusDAO> resultList = censusStateMap.values()
+                .stream()
                 .collect(toCollection(ArrayList::new));
         Comparator<CensusDAO> censusCSVComparator = (a, b ) -> (( a.densityPerSqKm - b.densityPerSqKm) > 0 ) ? -1 : 1;
         Collections.sort(resultList, censusCSVComparator);

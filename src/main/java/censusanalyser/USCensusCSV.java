@@ -18,7 +18,7 @@ public class USCensusCSV {
 
     @CsvBindByName(column = "Total area", required = true)
     public double totalArea;
-    //State Id,State,Population,Housing units,Total area,Water area,Land area,Population Density,Housing Density
+
     @CsvBindByName(column = "Water area", required = true)
     public double waterArea;
 
