@@ -1,6 +1,7 @@
 package censusanalyser;
 
 public class CensusDAO {
+
     public int areaInSqKm;
     public String state;
     public int population;
@@ -28,4 +29,9 @@ public class CensusDAO {
         densityPerSqKm = (int) usCensusCSV.populationDensity;
     }
 
+    public Object getCensusDTO(CensusAnalyser.Country country) {
+        if (country.equals(CensusAnalyser.Country.US))
+            return new USCensusCSV(state, stateCode, population, densityPerSqKm, areaInSqKm);
+        return new IndiaCensusCSV(state, population, densityPerSqKm, areaInSqKm);
+    }
 }

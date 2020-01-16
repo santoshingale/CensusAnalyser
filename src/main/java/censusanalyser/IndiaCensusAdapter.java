@@ -3,7 +3,6 @@ package censusanalyser;
 import csvbuilder.CSVBuilderException;
 import csvbuilder.CSVBuilderFactory;
 import csvbuilder.ICSVBuilder;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -21,7 +20,6 @@ public class IndiaCensusAdapter extends CensusAdapter {
     }
 
     public int loadIndiaStateCodeData( Map<String, CensusDAO> censusStateMap,String csvFilePath) throws CensusAnalyserException {
-
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             List<CSVStates> stateCodeDataList = csvBuilder.getListCSVFile(reader, CSVStates.class);

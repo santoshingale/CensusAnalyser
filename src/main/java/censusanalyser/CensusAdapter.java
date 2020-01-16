@@ -3,7 +3,6 @@ package censusanalyser;
 import csvbuilder.CSVBuilderException;
 import csvbuilder.CSVBuilderFactory;
 import csvbuilder.ICSVBuilder;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -17,12 +16,10 @@ public abstract class CensusAdapter {
     public abstract Map<String, CensusDAO> loadCensusData(String... csvFilePath) throws CensusAnalyserException;
 
     public <E> Map<String, CensusDAO> loadCensusData(Class<E> censusCSVClass, String csvFilePath) throws CensusAnalyserException {
-
         Map<String, CensusDAO> censusStateMap = new TreeMap<>();
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             List<E> listCSVFile = csvBuilder.getListCSVFile(reader, censusCSVClass);
-
             if (censusCSVClass.getName().equals("censusanalyser.IndiaCensusCSV")) {
                 StreamSupport.stream(listCSVFile.spliterator(), false)
                         .map(IndiaCensusCSV.class::cast)
